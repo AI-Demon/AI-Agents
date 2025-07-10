@@ -16,9 +16,16 @@ def http_request(
     url: Annotated[str, Field(description="URL-адрес сервера, куда нужно отправить HTTP-запрос")],
     data: Annotated[dict | None, Field(description="Данные для отправки в теле запроса")] = None,
 ) -> tuple[int, str]:
-    """Выполнить HTTP-запрос."""
-    log.debug(f"! {method} {url} {data}")
-    response = httpx.request(method, url, json=data)
+    """Выполнить HTTP-запрос.
+
+    Returns:
+        tuple[int, str]: Статус выполнения запроса и тело ответа.
+    """
+    log.info("%s %s", method, url)
+    try:
+        response = httpx.request(method, url, json=data)
+    except Exception as e:
+        return 0, str(e)
 
     return response.status_code, response.text
 

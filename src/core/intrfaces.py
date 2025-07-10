@@ -52,6 +52,10 @@ class KeyRatesAgentInterface(BaseAgentInterface, Protocol):  # noqa: D101
         """  # noqa: RUF002
         raise NotImplementedError
 
+    def delete_file(self: Self, file_id: str) -> None:
+        """Удалить пользовательский файл из модели."""
+        raise NotImplementedError
+
     def process_file(self: Self, file_id: str) -> None:
         """Обработать пользовательский файл."""
         raise NotImplementedError

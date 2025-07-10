@@ -22,7 +22,7 @@ loggger = init_logger(config.APP_NAME, config.LOG_LEVEL)
 
 def main(mode: str) -> None:  # noqa: D103, PLR0912
     agent: KeyRatesAgentInterface
-    if mode == "S":
+    if mode == "SL":
         agent = GCKeyRatesAgent(
             config.GIGACHAT_KEY,
             config.URL_KEY_RATES,
@@ -36,7 +36,7 @@ def main(mode: str) -> None:  # noqa: D103, PLR0912
             config.URL_KEY_RATES_ATTRS,
             config.URL_KEY_RATES_NAMES,
         )
-    elif mode == "SC":
+    elif mode == "S":
         agent = GCKeyRatesAgentClean(
             config.GIGACHAT_KEY,
             config.URL_KEY_RATES,
@@ -46,7 +46,7 @@ def main(mode: str) -> None:  # noqa: D103, PLR0912
     else:
         raise ValueError("Unknown mode")
 
-    start_time = dt.datetime.now(tz=dt.UTC) - dt.timedelta(days=7)
+    start_time = dt.datetime.now(tz=dt.UTC) - dt.timedelta(days=12)
     m = Mailer(host=config.MAIL_HOST, port=config.MAIL_PORT, username=config.MAIL_BOX, password=config.MAIL_PASSWORD)
     while True:
         try:
@@ -64,8 +64,9 @@ def main(mode: str) -> None:  # noqa: D103, PLR0912
                                 err, file_id = agent.load_file(attachment)
                                 if file_id:
                                     agent.process_file(file_id)
-
-            sleep(10)
+                                    agent.delete_file(file_id)
+                    sleep(30)
+            sleep(60)
         except KeyboardInterrupt:
             break
         except Exception as e:
@@ -75,8 +76,8 @@ def main(mode: str) -> None:  # noqa: D103, PLR0912
 if __name__ == "__main__":
     try:
         mode = ""
-        while mode not in ["G", "S", "SC"]:
-            mode = input("Select mode: G, S, SC\n>>> ").upper()
+        while mode not in ["G", "SL", "S"]:
+            mode = input("Select mode: G (Gemini), SL (Gigachat + LC), S (Gigachat)\n>>> ").upper()
 
         main(mode)
 

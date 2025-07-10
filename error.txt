@@ -1,0 +1,109 @@
+[Part(
+  text="""
+# Задача по работе с API
+
+Тебе необходимо взаимодействовать с внешним API для загрузки данных.
+Следуй инструкциям ниже для выполнения этой задачи.
+Используй внешнюю функцию для доступа к серверу по адресу: https://xewus.online.
+
+Когда задача выполнена, отправь в ответе только слово STOP.
+
+## Поиск документации OpenAPI:
+
+Последовательно добавляй суффиксы к базовому URL и выполняй запрос, пока не получишь документацию openapi.json.
+
+После успешного получения документации, изучи её,
+чтобы определить доступные конечные точки (URL-адреса) для получения и загрузки данных.
+
+### При переписывании промта не потеряй управляющие слова и адрес сервера!
+
+## Определение допустимых атрибутов и данных:
+
+На основе документации OpenAPI, определи полный список допустимых названий атрибутов (полей)
+и типов данных, которые могут быть использованы в запросах.
+Возможно, понадобятся дополнительные запросы к сервису
+для определения допустимых имен (названий) данных и атрибутов.
+Запиши эти названия в латинице.
+
+## Чтение и обработка файла:
+
+Когда разберёшься с документацией OpenAPI прочитай предоставленный файл.
+В файле должна быть таблица с данными, разделённая на столбцы.
+Каждый столбец содержит отдельные данные - загрузи их по отдельности.
+Особое внимание удели дате, с которой начинается содержимое файла. Эта дата является критически важной.
+
+Все числовые значения из файла должны быть сохранены и использованы в точно таком же формате,
+как и в исходном документе, без округления или преобразования в целые числа.
+
+## Составление JSON-запросов для загрузки данных:
+
+Для каждого вида данных, найденного в файле, составь отдельный JSON-запрос
+в соответствии с требованиями документации OpenAPI (там есть и примеры).
+Если при загрузке сервер отвечает ошибкой 422, то исправь запрос.
+
+Важно:
+Названия столбцов из файла должны быть переведены на латиницу в соответствии со списком допустимых атрибутов,
+полученных из документации OpenAPI или из запросов к сервису.
+Использование любых других названий строго запрещено.
+
+Поле comment в каждом запросе должно содержать заголовок из исходного файла.
+Поле name должно быть уникальным для каждого вида данных.
+Выбери подходящее значение для name из списка допустимых данных, определённых в документации OpenAPI.
+Названия атрибутов в запросе должны быть переведены на латиницу в соответствии со списком допустимых атрибутов.
+
+## Отправка данных на сервер:
+
+После составления всех валидных JSON-запросов, отправь данные на сервер,
+используя соответствующие конечные точки и форматы, определённые в документации OpenAPI.
+
+## Проверка загруженных данных:
+
+После успешной загрузки данных, проверь их на соответствие требованиям документации OpenAPI.
+Если данные не соответствуют требованиям, исправь их и отправь обновленные данные на сервер.
+
+## Обработка ошибок:
+
+Если для какого-либо атрибута или для поля name не удаётся найти подходящего значения в списке допустимых атрибутов
+из документации OpenAPI, НЕ СОЗДАВАЙ запрос для этого вида данных,
+вместо этого, запиши сообщение об ошибке, указывающее на проблему, например:
+"ERROR: не найдено подходящего атрибута для X".
+"""
+), Part(
+  file_data=FileData(
+    file_uri='https://generativelanguage.googleapis.com/v1beta/files/zhfm772p1h3z'
+  )
+), Part(
+  function_call=FunctionCall(
+    args={
+      'data': {},
+      'method': 'GET',
+      'url': 'https://xewus.online/openapi.json'
+    },
+    name='http_request'
+  )
+), Part(
+  function_response=FunctionResponse(
+    name='http_request',
+    response={
+      'data': '{"openapi":"3.1.0","info":{"title":"DocAPI","description":"---\\n### Описание\\n\\nСервис загрузки справочных данных.\\n","version":"0.1.0"},"paths":{"/api/v1/attrs/upload":{"post":{"tags":["Attrs"],"summary":"Upload Attr","description":"Добавить новый атрибут необходимый для загрузки документов.","operationId":"upload_attr_api_v1_attrs_upload_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AttrDTO"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/attrs/find":{"get":{"tags":["Attrs"],"summary":"Find Attrs","description":"Найти названия атрибутов совпадающие с подстрокой.","operationId":"find_attrs_api_v1_attrs_find_get","parameters":[{"name":"substring","in":"query","required":true,"schema":{"type":"string","title":"Substring"}}],"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/AttrDTO"},"title":"Response Find Attrs Api V1 Attrs Find Get"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/attrs/all":{"get":{"tags":["Attrs"],"summary":"Get Attr","description":"Получить список всех атрибутов.","operationId":"get_attr_api_v1_attrs_all_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"$ref":"#/components/schemas/AttrDTO"},"type":"array","title":"Response Get Attr Api V1 Attrs All Get"}}}}}}},"/api/v1/docs/known-names":{"get":{"tags":["Docs"],"summary":"Get Known Names","operationId":"get_known_names_api_v1_docs_known_names_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"items":{"type":"string"},"type":"array","title":"Response Get Known Names Api V1 Docs Known Names Get"}}}}}}},"/api/v1/docs/upload-doc":{"post":{"tags":["Docs"],"summary":"Upload Doc","description":"Загрузить новый или обновить существующий документ.","operationId":"upload_doc_api_v1_docs_upload_doc_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/DocDTO-Input"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/DocDTO-Output"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/docs/get-doc":{"get":{"tags":["Docs"],"summary":"Get Doc","description":"Найти документ по названию и актуальной дате.","operationId":"get_doc_api_v1_docs_get_doc_get","parameters":[{"name":"name","in":"query","required":true,"schema":{"type":"string","description":"Название документа (на латиннице).","title":"Name"},"description":"Название документа (на латиннице).","example":"MyDoc"},{"name":"actual_date","in":"query","required":true,"schema":{"type":"string","format":"date","description":"Дата актуальности указанная в искомом документе.","title":"Actual Date"},"description":"Дата актуальности указанная в искомом документе.","example":"2025-06-04"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/DocDTO-Output"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/docs/all":{"get":{"tags":["Docs"],"summary":"Get Docs","description":"Получить список всех документов.","operationId":"get_docs_api_v1_docs_all_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}}}}},"/api/v1/docs/cleen/{key}":{"get":{"tags":["Docs"],"summary":"Cleaning","operationId":"cleaning_api_v1_docs_cleen__key__get","parameters":[{"name":"key","in":"path","required":true,"schema":{"type":"string","title":"Key"}}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}}},"components":{"schemas":{"AttrDTO":{"properties":{"description":{"type":"string","maxLength":255,"minLength":4,"title":"Description","description":"Описание атрибута, примерно как в документе.","examples":["Какой-то нужный атрибут"]},"name":{"type":"string","maxLength":63,"minLength":3,"pattern":"^[a-z0-9_]+$","title":"Name","description":"Короткое название на латинице для унификации и распространения по информационным системам.","examples":["some_attr"]}},"type":"object","required":["description","name"],"title":"AttrDTO","description":"Схема атрибута"},"DocDTO-Input":{"properties":{"name":{"anyOf":[{"$ref":"#/components/schemas/DocNames"},{"type":"string"}],"title":"Name","description":"Название документа на латиннице для унификации и распространения по информационным системам.","examples":["important_doc_3"]},"actual_date":{"type":"string","format":"date","title":"Actual Date","description":"Дата, начиная с которой документ вступает в силу.","examples":["2025-04-15"]},"comment":{"type":"string","title":"Comment","description":"Комментарий о причинах добавления или изменения документа.","examples":["Вышла ошибка, загрузил новую версию."]},"body":{"additionalProperties":true,"type":"object","title":"Body","description":"JSON с атрибутами и значениями. Максимальная вложенность - 3. Ожидается, что на последнем уровне формат `{{дата: значение (число)}}`","examples":[{"attr_1":{"attr_12":{"attr_23":{"2020":0.13,"2021":0.17}},"attr_21":{"attr_31":{"2024":0.13,"2025":0.17},"attr_32":{"2024":-0.13,"2025":0.15}},"attr_22":{"attr_33":{"2024":0.13,"2025":0.17},"attr_34":{"2024":-0.13,"2025":0.15}}}}]}},"type":"object","required":["name","actual_date","comment","body"],"title":"DocDTO","description":"Схема документа."},"DocDTO-Output":{"properties":{"name":{"type":"string","pattern":"^[a-z0-9_]+$","title":"Name","description":"Название документа на латиннице для унификации и распространения по информационным системам.","examples":["important_doc_3"]},"actual_date":{"type":"string","format":"date","title":"Actual Date","description":"Дата, начиная с которой документ вступает в силу.","examples":["2025-04-15"]},"comment":{"type":"string","title":"Comment","description":"Комментарий о причинах добавления или изменения документа.","examples":["Вышла ошибка, загрузил новую версию."]},"body":{"additionalProperties":true,"type":"object","title":"Body","description":"JSON с атрибутами и значениями. Максимальная вложенность - 3. Ожидается, что на последнем уровне формат `{{дата: значение (число)}}`","examples":[{"attr_1":{"attr_12":{"attr_23":{"2020":0.13,"2021":0.17}},"attr_21":{"attr_31":{"2024":0.13,"2025":0.17},"attr_32":{"2024":-0.13,"2025":0.15}},"attr_22":{"attr_33":{"2024":0.13,"2025":0.17},"attr_34":{"2024":-0.13,"2025":0.15}}}}]}},"type":"object","required":["name","actual_date","comment","body"],"title":"DocDTO","description":"Схема документа."},"DocNames":{"type":"string","enum":["macro_forecast","changes_housing_prices","changes_cost_of_construction","key_rates","pace_sales"],"title":"DocNames","description":"Список документов проверяемых перед загрузкой."},"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"ValidationError":{"properties":{"loc":{"items":{"anyOf":[{"type":"string"},{"type":"integer"}]},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"}}},"hidden_components":{}}',
+      'status': 200
+    }
+  )
+), Part(
+  function_call=FunctionCall(
+    args={
+      'data': {},
+      'method': 'GET',
+      'url': 'https://xewus.online/api/v1/attrs/all'
+    },
+    name='http_request'
+  )
+), Part(
+  function_response=FunctionResponse(
+    name='http_request',
+    response={
+      'data': '[{"description":"Ключевая ставка","name":"rates"},{"description":"Морковка","name":"carrots"},{"description":"Картофель","name":"potatoes"}]',
+      'status': 200
+    }
+  )
+)]

@@ -24,6 +24,9 @@ dev = [
     "pre-commit-hooks>=5.0.0",
     "ruff>=0.12.0",
 ]
+testing = [
+    "pytest>=8.4.1",
+]
 tests = [
     "pytest-cov>=6.2.1",
 ]
@@ -96,8 +99,25 @@ select = [
     "LOG",  # flake8-logging
     "RUF",  # ruff-specific rules
 ]
-ignore = ["BLE001", "D100", "D413", "EM101", "ERA001", "G201", "INP001","PGH003", "PLR1711", "RET501", "RUF001", "TRY003"]
-per-file-ignores = {"__init__.py" = ["F401"]}
+ignore = [
+    "BLE001",
+    "D100",
+    "D413",
+    "EM101",
+    "ERA001",
+    "FIX002",
+    "G201",
+    "INP001",
+    "PGH003",
+    "PLR1711",
+    "RET501",
+    "RUF001",
+    "TD002",
+    "TD003",
+    "TD004",
+    "TRY003",
+]
+per-file-ignores = {"__init__.py" = ["F401"], "test*" = ["S101"]}
 
 [tool.ruff.format]
 quote-style = "double"
@@ -139,7 +159,8 @@ namespace_packages = true
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests/"]
+pythonpath = ["."]
+testpaths = ["testing/"]
 python_files = ["test_*.py", "*_test.py", "tests.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -152,13 +173,6 @@ addopts = [
     "--disable-warnings",   # отключить warnings
     "--color=yes",          # цветной вывод
     "--durations=10",       # показать 10 самых медленных тестов
-]
-# Маркеры для категоризации тестов
-markers = [
-    "slow: marks tests as slow",
-    "integration: marks tests as integration tests",
-    "unit: marks tests as unit tests",
-    "api: marks tests as API tests",
 ]
 filterwarnings = [
     "ignore::DeprecationWarning",

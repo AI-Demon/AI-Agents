@@ -120,6 +120,9 @@ class KeyRatesAgent(KeyRatesAgentInterface):
         log.info(f"Файл загружен. ID: {up_file.id_}")
         return None, up_file.id_
 
+    def delete_file(self: Self, file_id: str) -> None:  # noqa: D102
+        pass
+
     def process_file(self: Self, file_id: str) -> None:  # noqa: D102
         messages: list[BaseMessage] = [
             SystemMessage(
